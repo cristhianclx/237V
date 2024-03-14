@@ -38,16 +38,22 @@ data = [{
 def login():
     if request.method == "POST":
         data_input = request.get_json()
-        # {'user': 'cristhian', 'password': '123456'}
+        # {'user': 'cristhian', 'password': '123456', 'role': 'ADMIN'}
         user = data_input.get("user")
         password = data_input.get("password")
         role = data_input.get("role")
-        if user and password:
+        if user and password and role:
             for d in data:
                 if user == d["user"] and password == str(d["password"]):
-                    return {
-                        "success": True,
-                    }
+                    if role in d["role"]:
+                        return {
+                            "success": True,
+                        }
+                    else:
+                        return {
+                            "success": False,
+                            "message": "role not allowed",
+                        }
         return {
             "success": False,
             "message": "invalid credentials",
