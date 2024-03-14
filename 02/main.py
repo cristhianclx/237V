@@ -24,4 +24,13 @@ def read():
         "text": text_all,
     }
 
-# /read/1 => solo la pagina 1 en texto
+
+@app.route("/read/<int:page_number>")
+def read_page_number(page_number):
+    reader = PdfReader("data/2022.pdf")
+    page = reader.pages[page_number - 1]
+    text = page.extract_text()
+    return {
+        "page": page_number,
+        "text": text,
+    }
