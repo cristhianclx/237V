@@ -28,3 +28,9 @@ user_2 = User(id = 2, name="genaro", age=34)
 db.session.add(user_1)
 db.session.add(user_2)
 db.session.commit()
+
+from main import db, User, Message
+user_3 = User.query.filter_by(id = 3).first()
+message_1 = Message(id = 1, content="This is a message", user_id=3)
+db.session.add(message_1)
+db.session.commit()
