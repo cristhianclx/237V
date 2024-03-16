@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>User: {{ user.first_name }}</title>
+{% endblock %}
+
+{% block body %}
+<a type="button" class="btn btn-dark" href="{{ url_for('users') }}">Return to all users</a>
+
+<p>ID: {{ user.id }}</p>
+<p>First name: {{ user.first_name }}</p>
+<p>Last name: {{ user.last_name }}</p>
+<p>Age: {{ user.age }}</p>
+
+{% endblock %}
