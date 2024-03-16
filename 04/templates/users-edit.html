@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-<title>Add User</title>
+<title>Edit User: {{ user.id }}</title>
 {% endblock %}
 
 {% block libraries %}
@@ -14,31 +14,30 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 {% endblock %}
 
-
 {% block body %}
 
 <form method="POST">
     <div class="mb-3">
       <label class="form-label">ID</label>
-      <input type="text" class="form-control" id="id" name="id">
+      <input type="text" class="form-control" id="id" name="id" value="{{ user.id }}">
     </div>
     <div class="mb-3">
         <label class="form-label">First name</label>
-        <input type="text" class="form-control" id="first_name" name="first_name">
+        <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name }}">
       </div>
       <div class="mb-3">
         <label class="form-label">Last name</label>
-        <input type="text" class="form-control" id="last_name" name="last_name">
+        <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}">
       </div>
       <div class="mb-3">
         <label class="form-label">Age</label>
-        <input type="text" class="form-control" id="age" name="age">
+        <input type="text" class="form-control" id="age" name="age" value="{{ user.age }}">
       </div>
       <div class="mb-3">
         <label class="form-label">Content</label>
-  <textarea class="form-control" id="content" name="content" rows="3"></textarea>
+  <textarea class="form-control" id="content" name="content" rows="3">{{ user.content }}</textarea>
       </div>
-      <button type="submit" class="btn btn-primary">Add user</button>
+      <button type="submit" class="btn btn-primary">Edit user</button>
   </form>
 
 {% endblock %}

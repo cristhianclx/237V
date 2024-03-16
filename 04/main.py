@@ -5,10 +5,9 @@ from sqlalchemy.sql import func
 
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://username:password@host:port/database_name'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@host:port/database_name'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:sistemas@127.0.0.1:5432/cibertec'
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -67,6 +66,22 @@ def users_add():
         return redirect(url_for('users_by_id', id=user.id))
 
 
+@app.route("/users/edit/<int:id>", methods=["GET", "POST"])
+def users_edit(id):
+    user = User.query.get_or_404(id)
+    if request.method == "GET":
+        return render_template("users-edit.html", user=user)
+    if request.method == "POST":
+        user.id = request.form["id"]
+        user.first_name = request.form["first_name"]
+        user.last_name = request.form["last_name"]
+        user.age = request.form["age"]
+        user.content = request.form.get("content", "")
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('users_by_id', id=user.id))
+
+
 @app.route("/users/delete/<int:id>", methods=["GET", "POST"])
 def users_delete(id):
     user = User.query.get_or_404(id)
@@ -78,6 +93,24 @@ def users_delete(id):
         return redirect(url_for('users'))
     
 
-@app.route("/messages-by-user/<int:user_id")
+@app.route("/messages-by-user/<int:user_id>")
 def messages_by_user(user_id):
-    Message.query.filter_by(user_id = user_id).all()
+    user = User.query.get_or_404(user_id)
+    messages_data = Message.query.filter_by(user_id = user_id).all()
+    return render_template("messages-by-user.html", messages=messages_data, user=user)
+
+
+@app.route("/messages-by-user/add/<int:user_id>", methods=["GET", "POST"])
+def messages_by_user_add(user_id):
+    user = User.query.get_or_404(user_id)
+    if request.method == "GET":
+        return render_template("messages-by-user-add.html", user=user)
+    if request.method == "POST":
+        message = Message(
+            id=request.form["id"],
+            content=request.form.get("content", ""),
+            user_id=user.id,
+        )
+        db.session.add(message)
+        db.session.commit()
+        return redirect(url_for('messages_by_user', user_id=user.id))

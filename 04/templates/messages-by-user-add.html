@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-<title>Add User</title>
+<title>Add message</title>
 {% endblock %}
 
 {% block libraries %}
@@ -14,33 +14,18 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 {% endblock %}
 
-
 {% block body %}
-
 <form method="POST">
     <div class="mb-3">
-      <label class="form-label">ID</label>
-      <input type="text" class="form-control" id="id" name="id">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">First name</label>
-        <input type="text" class="form-control" id="first_name" name="first_name">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Last name</label>
-        <input type="text" class="form-control" id="last_name" name="last_name">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Age</label>
-        <input type="text" class="form-control" id="age" name="age">
+        <label class="form-label">ID</label>
+        <input type="text" class="form-control" id="id" name="id">
       </div>
       <div class="mb-3">
         <label class="form-label">Content</label>
   <textarea class="form-control" id="content" name="content" rows="3"></textarea>
       </div>
-      <button type="submit" class="btn btn-primary">Add user</button>
-  </form>
-
+    <button type="submit" class="btn btn-success">Add message</button>
+</form>
 {% endblock %}
 
 {% block extra %}

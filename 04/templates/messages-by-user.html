@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Messages</title>
+{% endblock %}
+
+{% block body %}
+
+<a href="{{ url_for('users') }}" class="btn btn-primary">View all users</a>
+
+<a href="{{ url_for('messages_by_user_add', user_id=user.id) }}" class="btn btn-info">Add message</a>
+
+{% if messages %}
+<hr>
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Content</th>
+        <th scope="col">Created at</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for message in messages %}
+      <tr>
+        <th scope="row">{{ message.id }}</th>
+        {% if message.content %}
+        <td>{{ message.content }}</td>
+        {% else %}
+        <td>-</td>
+        {% endif %}
+        <td>{{ message.created_at.strftime("%Y-%m-%d %I:%M") }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+{% endblock %}

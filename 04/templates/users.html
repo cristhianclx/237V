@@ -28,14 +28,16 @@
         <td>{{ user.last_name|title }}</td>
         <td>{{ user.age }}</td>
         {% if user.content %}
-        <td>{{ user.content }}</td>
+        <td>{{ user.content|safe }}</td>
         {% else %}
         <td>-</td>
         {% endif %}
         <td>{{ user.created_at.strftime("%Y-%m-%d %I:%M") }}</td>
         <td>
-          <a type="button" class="btn btn-primary" href="{{ url_for('users_by_id', id=user.id)}}">Ver</a>
-          <a type="button" class="btn btn-primary" href="{{ url_for('users_delete', id=user.id)}}">Borrar</a>
+          <a type="button" class="btn btn-primary" href="{{ url_for('users_by_id', id=user.id)}}">View</a>
+          <a type="button" class="btn btn-danger" href="{{ url_for('users_delete', id=user.id)}}">Delete</a>
+          <a type="button" class="btn btn-primary" href="{{ url_for('users_edit', id=user.id)}}">Edit</a>
+          <a type="button" class="btn btn-info" href="{{ url_for('messages_by_user', user_id=user.id)}}">View messages</a>
         </td>
       </tr>
       {% endfor %}
