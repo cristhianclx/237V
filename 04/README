@@ -1,0 +1,30 @@
+# 1ra vez
+
+python3 -m venv venv # creas el entorno virtual
+source venv/bin/activate # activar el entorno virtual (linux)
+source venv\Scripts\activate.bat # activa el entorno virtual (windows)
+
+# 2da vez o +
+
+source venv/bin/activate
+
+# utils
+
+pip install -r requirements.txt --upgrade # install
+
+flask --app main run --reload # correr Flask
+
+pip freeze # paquetes instalados
+
+flask --app main db init
+flask --app main db migrate
+flask --app main db upgrade
+
+flask --app main shell
+
+from main import db, User
+user_1 = User(id = 1, name="cristhian", age=34)
+user_2 = User(id = 2, name="genaro", age=34)
+db.session.add(user_1)
+db.session.add(user_2)
+db.session.commit()

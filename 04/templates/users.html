@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Users</title>
+{% endblock %}
+
+{% block body %}
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Age</th>
+        <th scope="col">Content</th>
+        <th scope="col">Created at</th>
+        <th scope="col">Options</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <th scope="row">{{ user.id }}</th>
+        <td>{{ user.name|title }}</td>
+        <td>{{ user.age }}</td>
+        {% if user.content %}
+        <td>{{ user.content }}</td>
+        {% else %}
+        <td>-</td>
+        {% endif %}
+        <td>{{ user.created_at.strftime("%Y-%m-%d %I:%M") }}</td>
+        <td>
+            ?
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}
