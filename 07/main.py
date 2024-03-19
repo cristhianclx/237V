@@ -155,6 +155,11 @@ api.add_resource(PublicUserResource, "/public/users")
 api.add_resource(UserResource, "/users")
 api.add_resource(UserByIDResource, "/users/<int:id>")
 api.add_resource(MessagesByUserResource, "/messages-by-user/<int:user_id>")
+# GET /messages/
+# POST /messages-by-user/3  {"content": "this is a good messages"}
+# GET /messages/ID-MESSAGE/
+# PATCH /messages/ID-MESSAGE/
+# DELETE /messages/ID-MESSAGE/
 
 
 if __name__ == "__main__":
