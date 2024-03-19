@@ -17,15 +17,20 @@ class PokemonResource(Resource):
         r = requests.get('https://pokeapi.co/api/v2/pokemon/{}'.format(name))
         if r.ok:
             data = r.json()
-             # game_indices
             abilities = []
             for a in data["abilities"]:
                 abilities.append(a["ability"]["name"])
+            game_indices = []
+            for g in data["game_indices"]:
+                game_indices.append({
+                    "game_index": g["game_index"],
+                    "version": g["version"]["name"],
+                })
             return {
                 "name": name,
                 "abilities": abilities,
                 "height": data["height"],
-                "game_indices": [{"version": 1, "game_index": 3}]
+                "game_indices": game_indices,
             }
         else:
             return {
