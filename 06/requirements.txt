@@ -1,0 +1,4 @@
+flask==3.0.2
+Flask-RESTful==0.3.10
+flask-restful-swagger-3
+flask-migrate
