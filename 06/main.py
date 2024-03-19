@@ -71,6 +71,25 @@ class UserByIDResource(Resource):
             "created_at": user.created_at.strftime("%Y-%m-%d %H:%M")
         }
     
+    def put(self, id):
+        user = User.query.filter_by(id = id).first()
+        if user is None:
+            return {}, 404 # not found
+        data_user = request.get_json()
+        if "name" in data_user and "age" in data_user:
+            user.name = data_user["name"]
+            user.age = data_user["age"]
+            db.session.add(user)
+            db.session.commit()
+            return {
+                "id": user.id,
+                "name": user.name,
+                "age": user.age,
+                "created_at": user.created_at.strftime("%Y-%m-%d %H:%M")
+            }
+        else:
+            return {}, 400
+    
     def patch(self, id):
         user = User.query.filter_by(id = id).first()
         if user is None:
