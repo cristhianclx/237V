@@ -69,6 +69,7 @@ class MessageSchema(ma.Schema):
         datetimeformat = "%Y-%m-%d %H:%M"
 
 
+message_schema = MessageSchema()
 messages_schema = MessageSchema(many = True)
 
 
@@ -143,11 +144,59 @@ class UserByIDResource(Resource):
         return {}, 204
 
 
+class MessageResource(Resource):
+    def get(self): # return all messages
+        messages_data = Message.query.all()
+        messages_results = messages_schema.dump(messages_data)
+        return messages_results    
+
+
 class MessagesByUserResource(Resource):
     def get(self, user_id):
+        user = User.query.filter_by(id = user_id).first()
+        if user is None:
+            return {}, 404 # not found
         messages_data = Message.query.filter_by(user_id = user_id).all()
         messages_results = messages_schema.dump(messages_data)
         return messages_results
+    
+    def post(self, user_id): # create a new message
+        user = User.query.filter_by(id = user_id).first()
+        if user is None:
+            return {}, 404 # not found
+        data_message = request.get_json()
+        message = Message(**data_message)
+        message.user = user
+        db.session.add(message)
+        db.session.commit()
+        return message_schema.dump(message), 201
+
+
+class MessageByIDResource(Resource):
+    def get(self, id):
+        message = Message.query.filter_by(id = id).first()
+        if message is None:
+            return {}, 404 # not found
+        return message_schema.dump(message)
+
+    def patch(self, id):
+        message = Message.query.filter_by(id = id).first()
+        if message is None:
+            return {}, 404 # not found
+        data_message = request.get_json()
+        if "content" in data_message:
+            message.content = data_message["content"]
+        db.session.add(message)
+        db.session.commit()
+        return message_schema.dump(message)
+    
+    def delete(self, id):
+        message = Message.query.filter_by(id = id).first()
+        if message is None:
+            return {}, 404 # not found
+        db.session.delete(message)
+        db.session.commit()
+        return {}, 204
 
 
 api.add_resource(WorkingResource, "/")
@@ -155,11 +204,8 @@ api.add_resource(PublicUserResource, "/public/users")
 api.add_resource(UserResource, "/users")
 api.add_resource(UserByIDResource, "/users/<int:id>")
 api.add_resource(MessagesByUserResource, "/messages-by-user/<int:user_id>")
-# GET /messages/
-# POST /messages-by-user/3  {"content": "this is a good messages"}
-# GET /messages/ID-MESSAGE/
-# PATCH /messages/ID-MESSAGE/
-# DELETE /messages/ID-MESSAGE/
+api.add_resource(MessageResource, "/messages")
+api.add_resource(MessageByIDResource, "/messages/<int:id>")
 
 
 if __name__ == "__main__":
