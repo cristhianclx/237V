@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <title>Chat</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+        <script type="text/javascript" charset="utf-8">
+            var socket = io("http://127.0.0.1:5000");
+            socket.on('connect', function() {
+                socket.emit('welcome', {data: 'User connected'});
+
+                $("#form").on("submit", function(e) {
+                    e.preventDefault();
+                    let username=$("#username").val();
+                    let message=$("#message").val();
+                    socket.emit("messages", {
+                        username: username,
+                        message: message,
+                    })
+                    $("#message").val("").focus();
+                });
+            });
+            socket.on("messages-response", function(msg) {
+                $("#messages").append("<p><b>" + msg.username + "</b>: " + msg.message + "</p>")
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Bienvenido</h1>
+
+        <form action="" method="POST" id="form">
+            <input type="text" name="username" id="username" placeholder="username" />
+            <input type="text" name="message" id="message" placeholder="message" />
+            <input type="submit" />
+        </form>
+
+        <h2>Mensajes</h2>
+
+        <div id="messages">
+           {% for message in messages %}
+           <p><b>{{ message.username }}:</b> {{ message.message }}</p>
+           {% endfor %}
+        </div>
+
+    </body>
+</html>
