@@ -10,9 +10,6 @@
                 $("#setUsername").on("submit", function(e) {
                     e.preventDefault();
                     username = $("#username").val();
-                    socket.on("messages-" + username, function(msg) {
-                        console.log(msg);
-                    });
                 });
                 $("#formPublic").on("submit", function(e) {
                     e.preventDefault();
@@ -23,9 +20,24 @@
                     })
                     $("#messagePublic").val("").focus();
                 });
+                $("#formDirect").on("submit", function(e) {
+                    e.preventDefault();
+                    let message=$("#messageDirect").val();
+                    let to=$("#toDirect").val();
+                    socket.emit("directs", {
+                        username: username,
+                        message: message,
+                        to: to,
+                    })
+                });
             });
             socket.on("messages-response", function(msg) {
-                $("#messages").append("<p><b>" + msg.username + "</b>: " + msg.message + "</p>")
+                $("#messages").append("<p><b>" + msg.username + " - " + msg.to + "</b>: " + msg.message + " <small>(" + msg.created_at + ")</small></p>")
+            });
+            socket.on("directs-response", function(msg) {
+                if (msg.to == username) {
+                    $("#messages").append("<p><b>" + msg.username + " - " + msg.to + "</b>: " + msg.message + " <small>(" + msg.created_at + ")</small></p>")
+                }
             });
         </script>
     </head>
@@ -59,7 +71,7 @@
 
         <div id="messages">
            {% for message in messages %}
-           <p><b>{{ message.username }}:</b> {{ message.message }}</p>
+           <p><b>{{ message.username }} - {{ message.to }}:</b> {{ message.message }} <small>({{ message.created_at }})</small></p>
            {% endfor %}
         </div>
 

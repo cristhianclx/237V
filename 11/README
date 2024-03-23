@@ -21,3 +21,11 @@ flask --app main db migrate
 flask --app main db upgrade
 
 flask --app main shell
+
+
+git init
+heroku create
+git add .
+git commit -m "message commit"
+git push heroku main
+

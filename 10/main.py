@@ -33,11 +33,12 @@ class Message(db.Model):
 
 class MessageSchema(ma.Schema):
     class Meta:
-        fields = ("id", "username", "message", "created_at")
+        fields = ("id", "username", "to", "message", "created_at")
         model = Message
         datetimeformat="%Y-%m-%d %H:%M"
 
 
+message_schema = MessageSchema()
 messages_schema = MessageSchema(many = True)
 
 
@@ -48,16 +49,6 @@ def home():
     return render_template("home.html", messages=messages_results)
 
 
-@socketio.on("welcome")
-def welcome(data, methods=["GET", "POST"]):
-    print("on welcome, data: {}".format(data))
-
-
-def messagesReceived(methods=["GET", "POST"]):
-    print("message was received")
-
-
-
 @socketio.on("messages")
 def messages(data, methods=["GET", "POST"]):
     # {'username': 'cristhian', 'message': '123456'}
@@ -65,7 +56,16 @@ def messages(data, methods=["GET", "POST"]):
     message = Message(**data)
     db.session.add(message)
     db.session.commit()
-    socketio.emit("messages-response", data, callback=messagesReceived)
+    socketio.emit("messages-response", message_schema.dump(message))
+
+
+@socketio.on("directs")
+def directs(data, methods=["GET", "POST"]):
+    message = Message(**data)
+    db.session.add(message)
+    db.session.commit()
+    socketio.emit("directs-response", message_schema.dump(message))
+
 
 
 if __name__ == '__main__':
