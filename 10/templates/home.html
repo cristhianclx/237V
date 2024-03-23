@@ -1,0 +1,67 @@
+<html>
+    <head>
+        <title>Chat</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+        <script type="text/javascript" charset="utf-8">
+            let username="";
+            var socket = io("http://127.0.0.1:5000");
+            socket.on('connect', function() {
+                $("#setUsername").on("submit", function(e) {
+                    e.preventDefault();
+                    username = $("#username").val();
+                    socket.on("messages-" + username, function(msg) {
+                        console.log(msg);
+                    });
+                });
+                $("#formPublic").on("submit", function(e) {
+                    e.preventDefault();
+                    let message=$("#messagePublic").val();
+                    socket.emit("messages", {
+                        username: username,
+                        message: message,
+                    })
+                    $("#messagePublic").val("").focus();
+                });
+            });
+            socket.on("messages-response", function(msg) {
+                $("#messages").append("<p><b>" + msg.username + "</b>: " + msg.message + "</p>")
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Bienvenido</h1>
+
+        <h2>Setear user</h2>
+        <form action="" method="POST" id="setUsername">
+            <input type="text" name="username" id="username" placeholder="username" />
+            <input type="submit" />
+        </form>
+        <hr>
+        
+        <h2>Enviar consulta a todos</h2>
+        <form action="" method="POST" id="formPublic">
+            <input type="text" name="messagePublic" id="messagePublic" placeholder="messagePublic" />
+            <input type="submit" />
+        </form>
+        <hr>
+
+        <h2>Enviar consulta personal</h2>
+        <form action="" method="POST" id="formDirect">
+            <input type="text" name="messageDirect" id="messageDirect" placeholder="message" />
+            <input type="text" name="toDirect" id="toDirect" placeholder="to" />
+            <input type="submit" />
+        </form>
+        
+        <hr>
+
+        <h2>Mensajes</h2>
+
+        <div id="messages">
+           {% for message in messages %}
+           <p><b>{{ message.username }}:</b> {{ message.message }}</p>
+           {% endfor %}
+        </div>
+
+    </body>
+</html>

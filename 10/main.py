@@ -23,6 +23,7 @@ socketio = SocketIO(app)
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(150), nullable=False)
+    to = db.Column(db.String(150), nullable=False)
     message = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
@@ -60,6 +61,7 @@ def messagesReceived(methods=["GET", "POST"]):
 @socketio.on("messages")
 def messages(data, methods=["GET", "POST"]):
     # {'username': 'cristhian', 'message': '123456'}
+    data["to"] = "ALL"
     message = Message(**data)
     db.session.add(message)
     db.session.commit()
